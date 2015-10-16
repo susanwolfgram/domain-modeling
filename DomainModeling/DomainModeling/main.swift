@@ -138,8 +138,10 @@ class Family {
     }
     
     func haveChild(fName : String, lName : String) -> Void {
-        let child = Person(firstName: fName, lastName: lName, age: 0, job : nil, spouse : nil)
-        members.append(child)
+        if (self.legal == "legal") {
+            let child = Person(firstName: fName, lastName: lName, age: 0, job : nil, spouse : nil)
+            members.append(child)
+        }
     }
     
     func legalOrNot() -> String {
