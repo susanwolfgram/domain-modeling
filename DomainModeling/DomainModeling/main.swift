@@ -8,10 +8,35 @@
 
 import Foundation
 
-struct Money {
+protocol Mathematics {
+    mutating func add(var money : Money)
+    mutating func subtract(var money : Money)
+}
+
+extension Double {
+    var usd: Money { return Money(amount: self, currency: "USD") }
+    var eur: Money { return Money(amount: self, currency: "EUR") }
+    var gbp: Money { return Money(amount: self, currency: "GBP") }
+    var can: Money { return Money(amount: self, currency: "CAN") }
+}
+
+struct Money: CustomStringConvertible, Mathematics {
     var amount : Double
     var currency : String
     
+    var description: String {
+        return "\(currency)\(amount)"
+    }
+    
+    mutating func add(var money : Money) {
+        let am = self.amount
+        self.amount = am + money.convert(self.currency)
+    }
+    
+    mutating func subtract(var money : Money) {
+        let am = self.amount
+        self.amount = am - money.convert(self.currency)
+    }
     mutating func convert(cur2 : String) -> Double {
         let am = self.amount
         if (self.currency == "USD") {
@@ -71,10 +96,14 @@ struct Money {
     }
 }
 
-class Job {
+class Job: CustomStringConvertible {
     var title : String
     var salary : Double
     var salType : String
+    
+    var description: String {
+        return "\(title): $\(salary) \(salType)"
+    }
     
     init(title : String, salary : Double, salType : String) {
         self.title = title
@@ -96,12 +125,16 @@ class Job {
     }
 }
 
-class Person {
+class Person: CustomStringConvertible {
     var firstName : String
     var lastName : String
     var age : Int
     var job : Job?
     var spouse : Person?
+    
+    var description: String {
+        return "Name: \(firstName) \(lastName). Age: \(age). Job: \(job!.title). Spouse: \(spouse!.firstName)."
+    }
     
     init(firstName : String, lastName : String, age : Int, job : Job?, spouse : Person?) {
         self.firstName = firstName
@@ -116,9 +149,17 @@ class Person {
     }
 }
 
-class Family {
+class Family: CustomStringConvertible {
     var members : [Person]
     var legal : String
+    
+    var description: String {
+        var mem = ""
+        for member in members {
+            mem += " " + member.firstName
+        }
+        return "Members:\(mem). Status: \(legal)"
+    }
     
     init(members : [Person], legal : String) {
         self.members = members
@@ -156,7 +197,7 @@ class Family {
     }
 }
 
-
+//TESTS
 print("Tests:")
 print("")
 var money1 = Money(amount: 10, currency: "USD")
@@ -195,6 +236,19 @@ print("Jim and Pam had a child! The Halpert Family is now made up of \(halpertFa
 print("The Halpert family's yearly income is $\(halpertFam.householdIncome())")
 print("\(halpertFam.members[0].toString()) is \(halpertFam.members[0].age).")
 print("Since at least one member of the Halpert family is over 21, their family is considered \(halpertFam.legalOrNot()).")
+print("")
 
-
+print("Part 2 Tests:")
+print(money4.description)
+print(job1.description)
+print(jim.description)
+print(halpertFam.description)
+money1.add(money2)
+print(money1.description)
+money1.subtract(money2)
+print(money1.description)
+print(3.5.usd)
+print(12.can)
+print(4.gbp)
+print(15.eur)
 
