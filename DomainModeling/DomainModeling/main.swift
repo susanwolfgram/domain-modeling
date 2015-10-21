@@ -37,6 +37,7 @@ struct Money: CustomStringConvertible, Mathematics {
         let am = self.amount
         self.amount = am - money.convert(self.currency)
     }
+    
     mutating func convert(cur2 : String) -> Double {
         let am = self.amount
         if (self.currency == "USD") {
@@ -87,11 +88,11 @@ struct Money: CustomStringConvertible, Mathematics {
         return self.amount
     }
     
-    mutating func addSubtract(var am2 : Money, op : String) -> Double {
+    mutating func addSubtract(var am2 : Money, op : String) -> Money {
         if (op == "+") {
-            return self.amount + am2.convert(self.currency)
+            return Money(amount: self.amount + am2.convert(self.currency), currency: self.currency)
         } else {
-            return self.amount - am2.convert(self.currency)
+            return Money(amount: self.amount - am2.convert(self.currency), currency: self.currency)
         }
     }
 }
@@ -205,19 +206,19 @@ var money2 = Money(amount: 3, currency: "EUR")
 var money3 = Money(amount: 5, currency: "CAN")
 var money4 = Money(amount: 2, currency: "GBP")
 var am4 = money1.addSubtract(money2, op : "+")
-print("10 USD + 3 EUR = \(am4) \(money1.currency)")
+print("10 USD + 3 EUR = \(am4)")
 print("")
 var am3 = money3.addSubtract(money2, op: "-")
-print("5 CAN - 3 EUR = \(am3) \(money3.currency)")
+print("5 CAN - 3 EUR = \(am3)")
 print("")
 var am2 = money4.addSubtract(money3, op: "+")
-print("2 GBP + 5 CAN = \(am2) \(money4.currency)")
+print("2 GBP + 5 CAN = \(am2)")
 print("")
 var am1 = money1.addSubtract(money4, op: "-")
-print("10 USD - 2 GBP = \(am1) \(money1.currency)")
+print("10 USD - 2 GBP = \(am1)")
 print("")
 var am = money2.addSubtract(money4, op: "+")
-print("3 EUR + 2 GBP = \(am) \(money2.currency)")
+print("3 EUR + 2 GBP = \(am)")
 print("")
 var job1 = Job(title: "Salesman", salary: 15, salType: "per-hour")
 print("job1 is \(job1.title) $\(job1.salary) \(job1.salType)")
